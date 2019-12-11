@@ -12,18 +12,35 @@
 		<relativePath />
 	</parent>
 
-	<groupId>com.mycompany</groupId>
-	<artifactId>Process_Pixels</artifactId>
+	<repositories>
+		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+	<groupId>thenaturalobserver</groupId>
+	<artifactId>stereomate</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
-	<name>Process Pixels</name>
-	<description>A Maven project implementing an ImageJ 1.x plugin.</description>
-	<url>http://mycompany.com/imagej/process-pixels/</url>
-	<inceptionYear>2012</inceptionYear>
+
+	<name>StereoMate</name>
+
+	<description>A suite of plugins to facilitate Stereological Automated analysis of confocal Z stacks.</description>
+
+	<url>http://www.thenaturalobserver.co.uk/stereomate/</url>
+
+	<inceptionYear>2019</inceptionYear>
+
 	<organization>
-		<name>My Company</name>
-		<url>http://mycompany.com/</url>
+		<name>theNaturalObserver</name>
+		<url>http://www.thenaturalobserver.co.uk/</url>
 	</organization>
+
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
@@ -32,10 +49,11 @@
 	</licenses>
 
 	<developers>
+
 		<developer>
-			<id>ctrueden</id>
-			<name>Curtis Rueden</name>
-			<url>https://imagej.net/User:Rueden</url>
+			<id>sjwest</id>
+			<name>Steven J. West</name>
+			<url>https://www.thenaturalobserver.co.uk/</url>
 			<roles>
 				<role>lead</role>
 				<role>developer</role>
@@ -45,36 +63,15 @@
 				<role>maintainer</role>
 			</roles>
 		</developer>
+
 	</developers>
+
 	<contributors>
 		<contributor>
-			<name>Johannes Schindelin</name>
-			<url>https://imagej.net/User:Schindelin</url>
+			<name>Steven J. West</name>
+			<url>https://www.thenaturalobserver.co.uk/</url>
 			<roles><role>founder</role></roles>
-			<properties><id>dscho</id></properties>
-		</contributor>
-		<contributor>
-			<name>Olivier Burri</name>
-			<url>https://imagej.net/User:Oburri</url>
-			<properties><id>lacan</id></properties>
-		</contributor>
-		<contributor>
-			<name>Mark Hiner</name>
-			<url>https://imagej.net/User:Hinerm</url>
-			<properties><id>hinerm</id></properties>
-		</contributor>
-		<contributor>
-			<name>Jules Maselbas</name>
-		</contributor>
-		<contributor>
-			<name>Kota Miura</name>
-			<url>https://imagej.net/User:Miura</url>
-			<properties><id>miura</id></properties>
-		</contributor>
-		<contributor>
-			<name>Yili Zhao</name>
-			<url>https://imagej.net/User:Panovr</url>
-			<properties><id>panovr</id></properties>
+			<properties><id>sjwest</id></properties>
 		</contributor>
 	</contributors>
 
@@ -86,30 +83,86 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/imagej/example-legacy-plugin</connection>
-		<developerConnection>scm:git:git@github.com:imagej/example-legacy-plugin</developerConnection>
+		<connection>scm:git:git://github.com/stevenjwest/stereomate</connection>
+		<developerConnection>scm:git:git@github.com:stevenjwest/stereomate</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/imagej/example-legacy-plugin</url>
+		<url>https://github.com/stevenjwest/stereomate</url>
 	</scm>
+
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/imagej/example-legacy-plugin/issues</url>
+		<url>https://github.com/stevenjwest/stereomate/issues</url>
 	</issueManagement>
+
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
 
 	<properties>
-		<package-name>com.mycompany.imagej</package-name>
-		<main-class>com.mycompany.imagej.Process_Pixels</main-class>
+		<package-name>thenaturalobserver.stereomate</package-name>
+		<!--main-class>thenaturalobserver.stereomate.StereoMate_Analyser</main-class-->
 		<license.licenseName>bsd_2</license.licenseName>
-		<license.copyrightOwners>My Company, Inc.</license.copyrightOwners>
+		<license.copyrightOwners>Steven J. West</license.copyrightOwners>
 	</properties>
 
 	<dependencies>
+
+	  <!--IMAGEJ-->
 		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>ij</artifactId>
-		</dependency>
+      <groupId>net.imagej</groupId>
+      <artifactId>ij</artifactId>
+      <!--version>1.50b</version-->
+    </dependency>
+
+		<!--MCIB3D-->
+    <dependency>
+      <!-- HAVE DECLARED DEPENCENCY 3.96, and used repo jitpack.io - 
+      		see https://github.com/mcib3d/mcib3d-core
+      		NB: This INCLUDES the Source Code! -->
+      <!-->groupId>com.github.mcib3d</groupId>
+      <artifactId>mcib3d-core</artifactId>
+      <version>3.9</version-->
+      <groupId>com.github.mcib3d</groupId>
+	<artifactId>mcib3d-core</artifactId>
+	<version>3.96</version>
+    </dependency>
+
+	  <!--WEKA>
+		<dependency>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+      <artifactId>weka-stable</artifactId>
+      <version>3.8.3</version>
+		</dependency-->
+
+	  <!--Parallel Iterative Deconvolution-->
+	  <!--ADD THE RECENT MAVEN PROJECT I ADDED TO MAVEN CENTRAL-->
+	  <dependency>
+	  	<groupId>io.github.stevenjwest</groupId>
+        <artifactId>ParallelIterativeDeconvolution</artifactId>
+        <version>1.11</version>
+	  </dependency>
+
+	  <!--commons-math-->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
+    </dependency>
+
+	  <!--TransformJ-->
+    <dependency>
+      <groupId>sc.fiji</groupId>
+      <artifactId>TransformJ_</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+
+	  <!--imagescience-->
+    <dependency>
+      <groupId>sc.fiji</groupId>
+      <artifactId>imagescience</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
 	</dependencies>
+
 </project>

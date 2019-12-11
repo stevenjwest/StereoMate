@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<stereomate>
+  <DIRtree>
+    <SampleFolderTitle Title="SAMPLE"/>
+    <RefFolderTitle Title="ref"/>
+  </DIRtree>
+  <ROIDiSector ROInumber="4">
+    <ROIBoundaries TouchBoundary="true">Touch Boundary:True</ROIBoundaries>
+  </ROIDiSector>
+</stereomate>
