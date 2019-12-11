@@ -103,65 +103,70 @@
 		<!--main-class>thenaturalobserver.stereomate.StereoMate_Analyser</main-class-->
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Steven J. West</license.copyrightOwners>
+		<!--  allowedDuplicateClasses>edu.emory.mathcs.utils.ConcurrencyUtils*</allowedDuplicateClasses -->
+		<!--  allowedDuplicateClasses>edu.emory.mathcs.utils.IOUtils*</allowedDuplicateClasses -->
+		<!-- To prevent the banDuplicateClasses error, must allow duplicate classes -->
+		<!-- https://github.com/rwl/ParallelColt/issues/6 -->
+		<allowedDuplicateClasses>edu.emory.mathcs.utils.*</allowedDuplicateClasses>
 	</properties>
 
 	<dependencies>
 
-	  <!--IMAGEJ-->
+		<!--IMAGEJ-->
 		<dependency>
-      <groupId>net.imagej</groupId>
-      <artifactId>ij</artifactId>
-      <!--version>1.50b</version-->
-    </dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+			<!--version>1.50b</version-->
+		</dependency>
 
 		<!--MCIB3D-->
-    <dependency>
-      <!-- HAVE DECLARED DEPENCENCY 3.96, and used repo jitpack.io - 
-      		see https://github.com/mcib3d/mcib3d-core
-      		NB: This INCLUDES the Source Code! -->
-      <!-->groupId>com.github.mcib3d</groupId>
-      <artifactId>mcib3d-core</artifactId>
-      <version>3.9</version-->
-      <groupId>com.github.mcib3d</groupId>
-	<artifactId>mcib3d-core</artifactId>
-	<version>3.96</version>
-    </dependency>
+		<dependency>
+			<!-- HAVE DECLARED DEPENCENCY 3.96, and used repo jitpack.io - 
+				see https://github.com/mcib3d/mcib3d-core
+				NB: This INCLUDES the Source Code! -->
+			<!-->groupId>com.github.mcib3d</groupId>
+			<artifactId>mcib3d-core</artifactId>
+			<version>3.9</version-->
+			<groupId>com.github.mcib3d</groupId>
+			<artifactId>mcib3d-core</artifactId>
+			<version>3.96</version>
+		</dependency>
 
-	  <!--WEKA>
+		<!--WEKA>
 		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
-      <artifactId>weka-stable</artifactId>
-      <version>3.8.3</version>
+			<artifactId>weka-stable</artifactId>
+			<version>3.8.3</version>
 		</dependency-->
 
-	  <!--Parallel Iterative Deconvolution-->
-	  <!--ADD THE RECENT MAVEN PROJECT I ADDED TO MAVEN CENTRAL-->
-	  <dependency>
-	  	<groupId>io.github.stevenjwest</groupId>
-        <artifactId>ParallelIterativeDeconvolution</artifactId>
-        <version>1.11</version>
-	  </dependency>
+		<!--Parallel Iterative Deconvolution-->
+		<!--ADD THE RECENT MAVEN PROJECT I ADDED TO MAVEN CENTRAL-->
+		<dependency>
+			<groupId>io.github.stevenjwest</groupId>
+			<artifactId>ParallelIterativeDeconvolution</artifactId>
+			<version>1.11</version>
+		</dependency>
 
-	  <!--commons-math-->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-math3</artifactId>
-      <version>3.6.1</version>
-    </dependency>
+		<!--commons-math-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<!-- >version>3.6.1</version THIS IS DECLARED IN PARENT POM-->
+		</dependency>
 
-	  <!--TransformJ-->
-    <dependency>
-      <groupId>sc.fiji</groupId>
-      <artifactId>TransformJ_</artifactId>
-      <version>4.0.0</version>
-    </dependency>
+		<!--TransformJ-->
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>TransformJ_</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 
-	  <!--imagescience-->
-    <dependency>
-      <groupId>sc.fiji</groupId>
-      <artifactId>imagescience</artifactId>
-      <version>3.0.0</version>
-    </dependency>
+		<!--imagescience-->
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>imagescience</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
 	</dependencies>
 
