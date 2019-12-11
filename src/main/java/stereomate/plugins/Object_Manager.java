@@ -71,8 +71,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
-import com.sun.xml.internal.ws.api.Component;
+//import com.sun.corba.se.spi.orbutil.threadpool.Work;
+//import com.sun.xml.internal.ws.api.Component;
 
 import ij.CompositeImage;
 import ij.IJ;
