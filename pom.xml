@@ -24,7 +24,7 @@
 	</repositories>
 
 	<groupId>thenaturalobserver</groupId>
-	<artifactId>stereomate</artifactId>
+	<artifactId>stereo_mate</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
 
