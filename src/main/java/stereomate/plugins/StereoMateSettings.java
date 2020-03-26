@@ -441,7 +441,8 @@ public class StereoMateSettings implements PlugIn {
 				}
 				//Retrieve parent, and then formulate new file object pointing to the StereoMateSettings.xml file:
 				file = file.getParentFile();
-				File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + "StereoMateSettings.xml");
+				//File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + "StereoMateSettings.xml");
+				File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + "stereo_mate_settings" + File.separator + "StereoMateSettings.xml");		
 				
 				//save data to stereoMateSettings.xml:
 				StreamResult result = new StreamResult(stereoMateSettings);
@@ -969,8 +970,13 @@ public class StereoMateSettings implements PlugIn {
 		}
 		//Retrieve parent, and then formulate new file object pointing to the StereoMateSettings.xml file:
 		file = file.getParentFile();
-		File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + "StereoMateSettings.xml");
-		
+		//File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + "StereoMateSettings.xml");
+		File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + "stereo_mate_settings" + File.separator + "StereoMateSettings.xml");		
+			
+		// need to check if stereMateSettings exists ,and if not, make it - stereoMateSettings.exists();
+		if( !stereoMateSettings.exists() ) {
+			createStereoMateSettingsFile(stereoMateSettings);
+		}
 		
 		//Here, the InputStream is used inside appropriate try... catch statements:
 		InputStream in = null;
@@ -1096,15 +1102,13 @@ public class StereoMateSettings implements PlugIn {
 	
 	/**
 	 * This method will CREATE a new StereoMate Settings file with the name and
-	 * location specified in the stereoMateSettings File object.  The
-	 * stereoMateSettings File MUST be a file and not a DIR, otherwise no
-	 * action is performed.
+	 * location specified in the stereoMateSettings File object.
 	 */
 	public static void createStereoMateSettingsFile(File stereoMateSettings) {
-		
-		if( stereoMateSettings.isFile() ) {
+					
+		stereoMateSettings.getParentFile().mkdir(); // make the parent DIR!
 			
-			String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><stereomate>\n" + 
+		String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><stereomate>\n" + 
 					"  <DIRtree>\n" + 
 					"    <SampleFolderTitle Title=\"SAMPLE\">Sample Text Content</SampleFolderTitle>\n" + 
 					"    <RefFolderTitle Title=\"ref\">Ref Text Content</RefFolderTitle>\n" + 
@@ -1268,8 +1272,6 @@ public class StereoMateSettings implements PlugIn {
 	                e.printStackTrace();
 	            }
 	        }
-			
-		}
 		
 	}
 	

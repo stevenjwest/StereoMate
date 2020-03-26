@@ -473,7 +473,7 @@ public class InputOutputFramework {
 		File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + "stereo_mate_settings" + File.separator + "StereoMateSettings.xml");		
 		
 		// need to check if stereMateSettings exists ,and if not, make it - stereoMateSettings.exists();
-		if( !stereoMateSettings.exists() ) {
+		if( stereoMateSettings.exists() == false ) {
 			StereoMateSettings.createStereoMateSettingsFile(stereoMateSettings);
 		}
 		
