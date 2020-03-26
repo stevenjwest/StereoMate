@@ -1108,7 +1108,7 @@ public class StereoMateSettings implements PlugIn {
 					
 		stereoMateSettings.getParentFile().mkdir(); // make the parent DIR!
 			
-		String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><stereomate>\n" + 
+			String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><stereomate>\n" + 
 					"  <DIRtree>\n" + 
 					"    <SampleFolderTitle Title=\"SAMPLE\">Sample Text Content</SampleFolderTitle>\n" + 
 					"    <RefFolderTitle Title=\"ref\">Ref Text Content</RefFolderTitle>\n" + 
