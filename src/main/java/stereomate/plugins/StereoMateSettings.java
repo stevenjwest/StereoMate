@@ -1051,7 +1051,7 @@ public class StereoMateSettings implements PlugIn {
 		}
 		//Retrieve parent, and then formulate new file object pointing to the StereoMateSettings.xml file:
 		file = file.getParentFile();
-		 file = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + fileName);
+		 file = new File(file.getAbsolutePath() + File.separator + "stereo_mate_settings" + File.separator + fileName);
 		 
 		 
 		//Here, the InputStream is used inside appropriate try... catch statements:
@@ -1261,6 +1261,141 @@ public class StereoMateSettings implements PlugIn {
 	        FileWriter fr = null;
 	        try {
 	            fr = new FileWriter(stereoMateSettings);
+	            fr.write(content);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }finally{
+	            //close resources
+	            try {
+	                fr.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        
+	        content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + 
+	        "<wplAuto>\n" + 
+	        "  <values z=\"55\">\n" + 
+	        "    <xyLength memory=\"1048576000\">520</xyLength>\n" + 
+	        "    <xyLength memory=\"2097152000\">550</xyLength>\n" + 
+	        "    <xyLength memory=\"3110076416\">930</xyLength>\n" + 
+	        "    <xyLength memory=\"3145728000\">940</xyLength>\n" + 
+	        "    <xyLength memory=\"4194304000\">1150</xyLength>\n" + 
+	        "    <xyLength memory=\"5242880000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"6291456000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"7340032000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"8388608000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"9437184000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"10485760000\">1980</xyLength>\n" + 
+	        "    <xyLength memory=\"11534336000\">2100</xyLength>\n" + 
+	        "    <xyLength memory=\"12582912000\">2180</xyLength>\n" + 
+	        "    <xyLength memory=\"13631488000\">2270</xyLength>\n" + 
+	        "    <xyLength memory=\"14680064000\">2360</xyLength>\n" + 
+	        "    <xyLength memory=\"15728640000\">2440</xyLength>\n" + 
+	        "  </values>\n" + 
+	        "<values z=\"50\">\n" + 
+	        "    <xyLength memory=\"1048576000\">520</xyLength>\n" + 
+	        "    <xyLength memory=\"2097152000\">550</xyLength>\n" + 
+	        "    <xyLength memory=\"3110076416\">930</xyLength>\n" + 
+	        "    <xyLength memory=\"3145728000\">940</xyLength>\n" + 
+	        "    <xyLength memory=\"4194304000\">1150</xyLength>\n" + 
+	        "    <xyLength memory=\"5242880000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"6291456000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"7340032000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"8388608000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"9437184000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"10485760000\">1980</xyLength>\n" + 
+	        "    <xyLength memory=\"11534336000\">2100</xyLength>\n" + 
+	        "    <xyLength memory=\"12582912000\">2180</xyLength>\n" + 
+	        "    <xyLength memory=\"13631488000\">2270</xyLength>\n" + 
+	        "    <xyLength memory=\"14680064000\">2360</xyLength>\n" + 
+	        "    <xyLength memory=\"15728640000\">2440</xyLength>\n" + 
+	        "  </values>\n" + 
+	        "<values z=\"40\">\n" + 
+	        "    <xyLength memory=\"1048576000\">520</xyLength>\n" + 
+	        "    <xyLength memory=\"2097152000\">550</xyLength>\n" + 
+	        "    <xyLength memory=\"3110076416\">930</xyLength>\n" + 
+	        "    <xyLength memory=\"3145728000\">940</xyLength>\n" + 
+	        "    <xyLength memory=\"4194304000\">1150</xyLength>\n" + 
+	        "    <xyLength memory=\"5242880000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"6291456000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"7340032000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"8388608000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"9437184000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"10485760000\">1980</xyLength>\n" + 
+	        "    <xyLength memory=\"11534336000\">2100</xyLength>\n" + 
+	        "    <xyLength memory=\"12582912000\">2180</xyLength>\n" + 
+	        "    <xyLength memory=\"13631488000\">2270</xyLength>\n" + 
+	        "    <xyLength memory=\"14680064000\">2360</xyLength>\n" + 
+	        "    <xyLength memory=\"15728640000\">2440</xyLength>\n" + 
+	        "  </values>\n" + 
+	        "<values z=\"30\">\n" + 
+	        "    <xyLength memory=\"1048576000\">520</xyLength>\n" + 
+	        "    <xyLength memory=\"2097152000\">550</xyLength>\n" + 
+	        "    <xyLength memory=\"3110076416\">930</xyLength>\n" + 
+	        "    <xyLength memory=\"3145728000\">940</xyLength>\n" + 
+	        "    <xyLength memory=\"4194304000\">1150</xyLength>\n" + 
+	        "    <xyLength memory=\"5242880000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"6291456000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"7340032000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"8388608000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"9437184000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"10485760000\">1980</xyLength>\n" + 
+	        "    <xyLength memory=\"11534336000\">2100</xyLength>\n" + 
+	        "    <xyLength memory=\"12582912000\">2180</xyLength>\n" + 
+	        "    <xyLength memory=\"13631488000\">2270</xyLength>\n" + 
+	        "    <xyLength memory=\"14680064000\">2360</xyLength>\n" + 
+	        "    <xyLength memory=\"15728640000\">2440</xyLength>\n" + 
+	        "  </values>\n" + 
+	        "<values z=\"20\">\n" + 
+	        "    <xyLength memory=\"1048576000\">520</xyLength>\n" + 
+	        "    <xyLength memory=\"2097152000\">550</xyLength>\n" + 
+	        "    <xyLength memory=\"3110076416\">930</xyLength>\n" + 
+	        "    <xyLength memory=\"3145728000\">940</xyLength>\n" + 
+	        "    <xyLength memory=\"4194304000\">1150</xyLength>\n" + 
+	        "    <xyLength memory=\"5242880000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"6291456000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"7340032000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"8388608000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"9437184000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"10485760000\">1980</xyLength>\n" + 
+	        "    <xyLength memory=\"11534336000\">2100</xyLength>\n" + 
+	        "    <xyLength memory=\"12582912000\">2180</xyLength>\n" + 
+	        "    <xyLength memory=\"13631488000\">2270</xyLength>\n" + 
+	        "    <xyLength memory=\"14680064000\">2360</xyLength>\n" + 
+	        "    <xyLength memory=\"15728640000\">2440</xyLength>\n" + 
+	        "  </values>\n" + 
+	        "<values z=\"10\">\n" + 
+	        "    <xyLength memory=\"1048576000\">520</xyLength>\n" + 
+	        "    <xyLength memory=\"2097152000\">550</xyLength>\n" + 
+	        "    <xyLength memory=\"3110076416\">930</xyLength>\n" + 
+	        "    <xyLength memory=\"3145728000\">940</xyLength>\n" + 
+	        "    <xyLength memory=\"4194304000\">1150</xyLength>\n" + 
+	        "    <xyLength memory=\"5242880000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"6291456000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"7340032000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"8388608000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"9437184000\">1240</xyLength>\n" + 
+	        "    <xyLength memory=\"10485760000\">1980</xyLength>\n" + 
+	        "    <xyLength memory=\"11534336000\">2100</xyLength>\n" + 
+	        "    <xyLength memory=\"12582912000\">2180</xyLength>\n" + 
+	        "    <xyLength memory=\"13631488000\">2270</xyLength>\n" + 
+	        "    <xyLength memory=\"14680064000\">2360</xyLength>\n" + 
+	        "    <xyLength memory=\"15728640000\">2440</xyLength>\n" + 
+	        "  </values>\n" + 
+	        "<efficientLengths>\n" + 
+	        "	<effLength start=\"190\">380</effLength>\n" + 
+	        "	<effLength start=\"400\">430</effLength>\n" + 
+	        "	<effLength start=\"460\">500</effLength>\n" + 
+	        "	<effLength start=\"540\">920</effLength>\n" + 
+	        "	<effLength start=\"1240\">1920</effLength>\n" + 
+	        "  </efficientLengths>\n" + 
+	        "</wplAuto>";
+	        
+	        fr = null;
+	        File wplSettings = new File(stereoMateSettings.getParent() + File.separator + "WPL AUTO Stats.xml");
+	        try {
+	            fr = new FileWriter(wplSettings);
 	            fr.write(content);
 	        } catch (IOException e) {
 	            e.printStackTrace();
