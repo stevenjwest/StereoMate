@@ -469,19 +469,23 @@ public class InputOutputFramework {
 		}
 		//Retrieve parent, and then formulate new file object pointing to the StereoMateSettings.xml file:
 		file = file.getParentFile();
-		File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + "StereoMateSettings.xml");
+	  //File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + ".settings" + File.separator + "StereoMateSettings.xml");
+		File stereoMateSettings = new File(file.getAbsolutePath() + File.separator + "stereo_mate_settings" + File.separator + "StereoMateSettings.xml");		
 		
+		// need to check if stereMateSettings exists ,and if not, make it - stereoMateSettings.exists();
+		if( !stereoMateSettings.exists() ) {
+			StereoMateSettings.createStereoMateSettingsFile(stereoMateSettings);
+		}
 		
 		//Here, the InputStream is used inside appropriate try... catch statements:
 		InputStream in = null;
-		
+				
 		try {
 			in = new FileInputStream(stereoMateSettings);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
 		//Once an InputStream is established, next build the DOM Document:
 		
 		//generate Document Builder:

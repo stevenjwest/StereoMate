@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -1092,6 +1093,185 @@ public class StereoMateSettings implements PlugIn {
 
 	} //end buildDom(String)
 	
+	
+	/**
+	 * This method will CREATE a new StereoMate Settings file with the name and
+	 * location specified in the stereoMateSettings File object.  The
+	 * stereoMateSettings File MUST be a file and not a DIR, otherwise no
+	 * action is performed.
+	 */
+	public static void createStereoMateSettingsFile(File stereoMateSettings) {
+		
+		if( stereoMateSettings.isFile() ) {
+			
+			String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><stereomate>\n" + 
+					"  <DIRtree>\n" + 
+					"    <SampleFolderTitle Title=\"SAMPLE\">Sample Text Content</SampleFolderTitle>\n" + 
+					"    <RefFolderTitle Title=\"ref\">Ref Text Content</RefFolderTitle>\n" + 
+					"  </DIRtree>\n" + 
+					"  <ROIDiSector ROInumber=\"4\">\n" + 
+					"    <ROIBoundaries TouchBoundary=\"true\">Touch Boundary:True</ROIBoundaries>\n" + 
+					"  </ROIDiSector>\n" + 
+					"  <InputOutputFramework>\n" + 
+					"	<Default>\n" + 
+					"  		<useMinDepthDef str=\"true\"/>\n" + 
+					"		<logProcessingDef str=\"true\"/>\n" + 
+					"	</Default>\n" + 
+					"	<Current>\n" + 
+					"		<useMinDepth str=\"TRUE\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</useMinDepth>\n" + 
+					"		<logProcessing str=\"TRUE\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</logProcessing>\n" + 
+					"	</Current>\n" + 
+					"  </InputOutputFramework>\n" + 
+					"  <StereoMateDeconvolution>\n" + 
+					"  	<Default>\n" + 
+					" 		<boundaryDef str=\"REFLEXIVE\"/>\n" + 
+					" 		<resizingDef str=\"MINIMAL\"/>\n" + 
+					" 		<outputDef str=\"BYTE\"/>\n" + 
+					" 		<precisionDef str=\"SINGLE\"/>\n" + 
+					" 		<thresholdDef str=\"-1\"/>\n" + 
+					" 		<maxItersDef str=\"40\"/>\n" + 
+					" 		<showIterationsDef str=\"false\"/>\n" + 
+					" 		<gammaDef str=\"0.0\"/>\n" + 
+					" 		<filterXYDef str=\"1.0\"/>\n" + 
+					" 		<filterZDef str=\"1.0\"/>\n" + 
+					" 		<normalizeDef str=\"false\"/>\n" + 
+					" 		<logMeanDef str=\"false\"/>\n" + 
+					" 		<antiRingDef str=\"true\"/>\n" + 
+					" 		<changeThreshPercentDef str=\"0.01\"/>\n" + 
+					" 		<dbDef str=\"false\"/>\n" + 
+					" 		<detectDivergenceDef str=\"true\"/>\n" + 
+					" 	</Default>\n" + 
+					" 	<Current>\n" + 
+					" 	 	<boundary str=\"REFLEXIVE\">\n" + 
+					"			<comboboxString>REFLEXIVE</comboboxString>\n" + 
+					"			<comboboxString>PERIODIC</comboboxString>\n" + 
+					"			<comboboxString>ZERO</comboboxString>\n" + 
+					"		</boundary>\n" + 
+					" 		<resizing str=\"AUTO\">\n" + 
+					"			<comboboxString>MINIMAL</comboboxString>\n" + 
+					"			<comboboxString>AUTO</comboboxString>\n" + 
+					"			<comboboxString>NEXT_POWER_OF_TWO</comboboxString>\n" + 
+					"		</resizing>\n" + 
+					" 		<output str=\"BYTE\">\n" + 
+					"			<comboboxString>SAME_AS_SOURCE</comboboxString>\n" + 
+					"			<comboboxString>BYTE</comboboxString>\n" + 
+					"			<comboboxString>SHORT</comboboxString>\n" + 
+					"			<comboboxString>FLOAT</comboboxString>\n" + 
+					"		</output>\n" + 
+					" 		<precision str=\"SINGLE\">\n" + 
+					"			<comboboxString>SINGLE</comboboxString>\n" + 
+					"			<comboboxString>DOUBLE</comboboxString>\n" + 
+					"		</precision>\n" + 
+					" 		<threshold str=\"-1\"/>\n" + 
+					" 		<maxIters str=\"40\"/>\n" + 
+					"		<nOfThreads str=\"4\"/>\n" + 
+					" 		<showIterations str=\"false\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</showIterations>\n" + 
+					" 		<gamma str=\"0.0\"/>\n" + 
+					" 		<filterXY str=\"1.0\"/>\n" + 
+					" 		<filterZ str=\"1.0\"/>\n" + 
+					" 		<normalize str=\"false\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</normalize>\n" + 
+					" 		<logMean str=\"false\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</logMean>\n" + 
+					" 		<antiRing str=\"true\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</antiRing>\n" + 
+					" 		<changeThreshPercent str=\"0.01\"/>\n" + 
+					" 		<db str=\"false\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</db>\n" + 
+					" 		<detectDivergence str=\"true\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</detectDivergence>\n" + 
+					" 	</Current>\n" + 
+					"  </StereoMateDeconvolution>\n" + 
+					"  <RoiDiSector>\n" + 
+					"	<Default>\n" + 
+					"		<enableIJWinDef str=\"true\"/>\n" + 
+					"		<enableKeyDef str=\"true\"/>\n" + 
+					"	</Default>\n" + 
+					"	<Current>\n" + 
+					"		<enableIJWin str=\"true\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</enableIJWin>\n" + 
+					"		<enableKey str=\"true\">\n" + 
+					"			<comboboxString>true</comboboxString>\n" + 
+					"			<comboboxString>false</comboboxString>\n" + 
+					"		</enableKey>\n" + 
+					"	</Current>\n" + 
+					"  </RoiDiSector>\n" + 
+					"  <ObjectManager>\n" + 
+					"	<Default>\n" + 
+					"		<gaussianObjDef str=\"1,2,4,2,1\"/>\n" + 
+					"		<linearObjDef str=\"5\"/>\n" + 
+					"		<maxObjSelDef str=\"1000\"/>\n" + 
+					"		<roughClassifierDef str=\"IBk\"/>\n" + 
+					"		<sliceProjectionDef str=\"1-10\"/>\n" + 
+					"	</Default>\n" + 
+					"	<Current>\n" + 
+					"		<gaussianObj str=\"1,2,4,2,1\"/>\n" + 
+					"		<linearObj str=\"5\"/>\n" + 
+					"		<maxObjSel str=\"1000\"/>\n" + 
+					"		<roughClassifier str=\"IBk\"/>\n" + 
+					"		<sliceProjection str=\"1-10\"/>\n" + 
+					"	</Current>\n" + 
+					"  </ObjectManager>\n" + 
+					"  <StereoAnalyser>\n" + 
+					"	<Default>\n" + 
+					"		<analyserMinObjDef str=\"100\"/>\n" + 
+					"		<analyserMinObjXYDef str=\"0\"/>\n" + 
+					"		<analyserMinObjZDef str=\"2\"/>\n" + 
+					"		<analyserMaxObjDef str=\"2147483647\"/>\n" + 
+					"		<analyserMaxObjXYDef str=\"30\"/>\n" + 
+					"		<analyserMaxObjZDef str=\"20\"/>\n" + 
+					"	</Default>\n" + 
+					"	<Current>\n" + 
+					"		<analyserMinObj str=\"100\"/>\n" + 
+					"		<analyserMinObjXY str=\"0\"/>\n" + 
+					"		<analyserMinObjZ str=\"2\"/>\n" + 
+					"		<analyserMaxObj str=\"2147483647\"/>\n" + 
+					"		<analyserMaxObjXY str=\"1\"/>\n" + 
+					"		<analyserMaxObjZ str=\"1\"/>\n" + 
+					"	</Current>\n" + 
+					"  </StereoAnalyser>\n" + 
+					"  \n" + 
+					"</stereomate>";
+			
+	        FileWriter fr = null;
+	        try {
+	            fr = new FileWriter(stereoMateSettings);
+	            fr.write(content);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }finally{
+	            //close resources
+	            try {
+	                fr.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+			
+		}
+		
+	}
 	
 
 }// end class
