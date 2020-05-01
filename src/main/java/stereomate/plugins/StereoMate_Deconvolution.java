@@ -167,16 +167,20 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	int imagesChannelsError;
 	int imagesFramesError;
 	
+	
+	/**
+	 * Set up the Dialog Window for the SM Deconvolution plugin.  Input images via the default 
+	 * File Selector, select Channels and PSFs via Selector boxes and buttons, and select
+	 * Iterations and Threads via inputs boxes.
+	 */
 	@Override
 	public void run(String arg) {
-		// TODO Auto-generated method stub
+
 		// Set up DialogWindow here...
 		dw = new DialogWindow("SM Deconvolution", this);
 		
 		dw.addFileSelector("Image(s) for Deconvolution:"); //add FileSelector panel.
-		
-		//dw.addFileSelector("PSF:", dw.FILES_AND_DIRS, dw.MATCHED_INPUT);
-		
+				
 		//Add criteria for User to add:
 		
 		//Number of Channels:
@@ -214,7 +218,6 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		//set boolean processedAnImage to false:
 			//This is for appropriate logging of image processing at end of process() loop 
 			// in cleanup()
-	
 		processedAnImage = false;
 		
 	}
@@ -547,7 +550,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	 * @param logEntry
 	 */
 	protected void logProcessing(String logEntry) {
-		if(logImageProcessing.equals("true")) {
+		if(logImageProcessing.equalsIgnoreCase("true")) {
 			IJ.log(logEntry);
 		}
 	}
@@ -681,7 +684,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			 nList2 = docSMS.getElementsByTagName("logProcessing");
 			logImageProcessing = ((Element)nList2.item(0)).getAttribute("str");			
 
-		
+			
 		// All of the variables have been collected for deconvolution from xml file now,
 				// Next need to deconvolve each image selected on the DialogWindow -> via process() method
 				
@@ -717,6 +720,9 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		
 		//with new Structure in DialogWindow3, only need to set blurredImage to impToProcess..
 		blurredImage = impToProcess;
+		
+		logProcessing("processing image: "+blurredImage.getTitle());
+		logProcessing("");
 		
 		//set bitDepth variable according to outputStr:
 			// values: SAME_AS_SOURCE, BYTE, SHORT, FLOAT 
@@ -1055,6 +1061,9 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		//create a channelSplitter object:
 		SMChannelSplitter channelSplitter = new SMChannelSplitter(blurredImage, tempDir);
 		
+		logProcessing("No. Channels: "+channelSplitter.getChannelNumber());
+		logProcessing("");
+		
 		//At this point, a single channel z stack is present in processingImage inside SMChannelSplitter, 
 		//and if more than one channel was present, these are saved to disk in the tempDir, and each file 
 		//reference is stored in chFileArray, in SMChannelSplitter.
@@ -1065,8 +1074,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		
 	for(int b=0; b<channelSplitter.getChannelNumber() ; b++) {
 			
-		////IJ.showMessage("b in splitBlurredImageChannel: "+b);
-		////IJ.showMessage("File count in chFileArray: "+channelSplitter.chFileArray.size() );
+		//IJ.showMessage("b in splitBlurredImageChannel: "+b);
+		//IJ.showMessage("File count in chFileArray: "+channelSplitter.chFileArray.size() );
 		if(b > 0) {
 			//if b is greater than 0, the first channel will have been processed - therefore
 			//need to retrieve and open the next channel:
@@ -1188,6 +1197,9 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			//next, process each image in zStackSplitter zFileArray - i.e. the saved images from
 				//the subStack:
 			// This should be performed in the zStackSplitter object!
+		
+		logProcessing("Split Z: "+zStackSplitter.getSize());
+		logProcessing("");
 			
 		for(int a=0; a<zStackSplitter.getSize(); a++) {
 			//Get the next imp from the zStackSplitter:
@@ -1287,6 +1299,9 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			// exposed, but not over-exposed.
 			// Can work on this as part of the processing...
 		
+		logProcessing("Split XY: "+xyStackSplitter.getSize());
+		logProcessing("");
+		
 		//Loop through splitImages in xyStackSplitter:
 		
 		for(int a=0; a<xyStackSplitter.getSize(); a++) {
@@ -1294,6 +1309,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			//IJ.showMessage("1239 blurredImage: "+blurredImage);
 			
 			blurredImage = xyStackSplitter.getNextImp(a);
+			
+			logProcessing("  Processing Image: "+blurredImage.getTitle() );
 			
 			//IJ.showMessage("1243 blurredImage: "+blurredImage);
 			
@@ -1987,7 +2004,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 						zString = "" + getStartValue(a);
 					}
 					
-					IJ.log("zString: "+zString+" loop a: "+a);
+					//IJ.log("zString: "+zString+" loop a: "+a);
 					
 					//Set the ArrayList with the substack:
 					subStacks.add(makeSubstack( imp, zString, true ) );
@@ -2446,6 +2463,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		   int width = efficientLengths.parseLength(widthImp);
 		   int height = efficientLengths.parseLength(heightImp);
 		   
+		   //IJ.showMessage("img w/h: "+widthImp+" "+heightImp+" effLengths w/h: "+width+" "+height);
+		   
 		   // Now [Hopefully!] width and height equal efficient values for deconvolution image
 		   // lengths.
 		   // These values need to be used to divide the Image width and heights up into two
@@ -2482,6 +2501,18 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		   
 		   widthCropPoints = determineImageDivision(widthImp, width);
 		   heightCropPoints = determineImageDivision(heightImp, height);
+		   
+		   //IJ.log("WIDTH CROP POINTS:");
+		   //for(int a=0; a<widthCropPoints.getLength(); a++) {
+			 //  IJ.log(" START:"+widthCropPoints.getStart(a));
+			  // IJ.log(" END:"+widthCropPoints.getEnd(a));
+		 //  }
+		   
+		   //IJ.log("HEIGHT CROP POINTS:");
+		   //for(int a=0; a<heightCropPoints.getLength(); a++) {
+			 //  IJ.log(" START:"+heightCropPoints.getStart(a));
+			 //  IJ.log(" END:"+heightCropPoints.getEnd(a));
+		  // }
 		   
 		   // Now the widthCropPoints and heightCropPoints should contain the arrays to divide the image.
 		   
@@ -2533,7 +2564,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
     				//set roi on currentImp based on current index:
     				//IJ.showMessage("index: "+index);
     				currentImp.setRoi( widthCropPoints.getStart(a), heightCropPoints.getStart(b),
-				  			widthCropPoints.getEnd(a), heightCropPoints.getEnd(b) );
+				  					   (widthCropPoints.getEnd(a)-widthCropPoints.getStart(a)), 
+				  					   (heightCropPoints.getEnd(b)-heightCropPoints.getStart(b)) );
     				//loop through each slice and insert into currentImp:
     				for(int c=1; c<=currentImp.getNSlices(); c++) {
     					currentImp.setZ(c);
@@ -2650,7 +2682,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 					  //Two steps:  Set ROI on imp, and then run a Duplicator:
 					  
 					  currentImp.setRoi( widthCropPoints.getStart(a), heightCropPoints.getStart(b),
-							  			widthCropPoints.getEnd(a), heightCropPoints.getEnd(b) );
+							  			(widthCropPoints.getEnd(a)-widthCropPoints.getStart(a)), 
+							  			(heightCropPoints.getEnd(b)-heightCropPoints.getStart(b)) );
 					  
 					  //save the output to the splitImps array:
 					  splitImps.add( duplicator.run(currentImp) );
@@ -2805,8 +2838,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			
 			//Now, the memToLength object contains all the data from the XML file.
 			
-			//look up the MaxXY length based on the maxMem value passed to this method:
-			
+			//look up the MaxXY length based on the maxMem value passed to this method:			
 			xy = memToLength.lookUpMaxXY(maxMem);
 			
 			//IJ.showMessage("Max XY value: "+xy);
