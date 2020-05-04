@@ -690,9 +690,10 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 				
 		//Just need to Log the start of the Deconvolution here:
 		logProcessing("Beginning Deconvolution of "+dw.totalFileCount+" files...");
-		logProcessing("Threads: "+nOfThreadsStr+" Iterations: "+maxItersStr+" Channels: "+PsfSelectors.size() );
-		logProcessing("--------------------------------------");
 		logProcessing("");
+		logProcessing("Threads: "+nOfThreadsStr+"  Iterations: "+maxItersStr );
+		logProcessing(" Channels: "+PsfSelectors.size()+"  PSF Z Slices: "+PSF_SLICE_NUMBER );
+		logProcessing("--------------------------------------");
 		
 		
 	}
@@ -721,6 +722,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		//with new Structure in DialogWindow3, only need to set blurredImage to impToProcess..
 		blurredImage = impToProcess;
 		
+		logProcessing("");
+		logProcessing("");
 		logProcessing("processing image: "+blurredImage.getTitle());
 		logProcessing("");
 		
@@ -875,6 +878,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			dw.deleteOutputDirTree();
 			//And log this action:
 			logProcessing("");
+			logProcessing("");
 			logProcessing("0 of "+dw.totalFileCount+" files processed.");
 			logProcessing("Output DIR Tree deleted, please run again." );
 			logProcessing("--------------------------------------");
@@ -882,6 +886,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		}
 		else {
 			//if images have been deconvolved, then finish with summary information:
+			logProcessing("");
 			logProcessing("");
 			logProcessing("Deconvolution complete." );
 			logProcessing(""+imagesProcessed+" of "+dw.totalFileCount+" files processed.");
@@ -1061,8 +1066,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		//create a channelSplitter object:
 		SMChannelSplitter channelSplitter = new SMChannelSplitter(blurredImage, tempDir);
 		
-		logProcessing("No. Channels: "+channelSplitter.getChannelNumber());
-		logProcessing("");
+		logProcessing("Splitting Channels: "+channelSplitter.getChannelNumber() );
+		//logProcessing("");
 		
 		//At this point, a single channel z stack is present in processingImage inside SMChannelSplitter, 
 		//and if more than one channel was present, these are saved to disk in the tempDir, and each file 
@@ -1107,9 +1112,11 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		//ImagePlus imp2 = new ImagePlus("ImagePlus2",ip2);
 		//imp2.show();
 		
+		logProcessing("  Ch"+(b+1)+" PSF: "+PSF);
+		
 		//determine image dimensions and split image to be processed [processingImage] as required:	
 			//Save each segment onto Disk - and delete the Channel image!
-		blurredImage = splitBlurredImageZ(blurredImage);
+		blurredImage = splitBlurredImageZ(blurredImage, b);
 			//Note, this method calls the deconvolution algorithm - as it may be split 
 			//After a call to this method, and the deconstruction, deconvolution and reconstruction
 			//of the image is handled in this method.
@@ -1169,8 +1176,9 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	 * Substacks are formed of the original blurred image stack if the stack itself is larger than 
 	 * the PSF image stack.
 	 * @param blurredImage Image to be processed.
+	 * @param chNum Channel number being processed.
 	 */
-	public ImagePlus splitBlurredImageZ(ImagePlus blurredImage) {
+	public ImagePlus splitBlurredImageZ(ImagePlus blurredImage, int chNum) {
 
 		//FIRST:
 		//Construct a new ZStackSplitter obj to process the zStack:
@@ -1198,8 +1206,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 				//the subStack:
 			// This should be performed in the zStackSplitter object!
 		
-		logProcessing("Split Z: "+zStackSplitter.getSize());
-		logProcessing("");
+		logProcessing("  Ch"+(chNum+1)+": Splitting Z Stack: "+zStackSplitter.getSize());
+		//logProcessing("");
 			
 		for(int a=0; a<zStackSplitter.getSize(); a++) {
 			//Get the next imp from the zStackSplitter:
@@ -1209,7 +1217,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 				//pass this image to the splitBlurredImageXY method - to continue passing it down the
 					//methods to deconvolution:
 			
-			blurredImage = splitBlurredImageXY( blurredImage ); //must return an imp from this method!
+			blurredImage = splitBlurredImageXY( blurredImage, a ); //must return an imp from this method!
 			
 			//if more than one file is generated in zStackSplitter during the split, as each image is
 			// processed it must be saved to disk.
@@ -1251,8 +1259,9 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	 * Split blurred image in XY (width/height).  This depends on the efficiency of the WPL deconvolution algorithm
 	 * which has been determined empirically.
 	 * @param blurredImage
+	 * @param zNum Z Stack number being processed.
 	 */
-	public ImagePlus splitBlurredImageXY(ImagePlus blurredImage) {
+	public ImagePlus splitBlurredImageXY(ImagePlus blurredImage, int zNum) {
 		
 		ImagePlus deblurredImage;
 		
@@ -1299,8 +1308,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			// exposed, but not over-exposed.
 			// Can work on this as part of the processing...
 		
-		logProcessing("Split XY: "+xyStackSplitter.getSize());
-		logProcessing("");
+		logProcessing("    Z"+(zNum+1)+": Splitting XY Image: "+xyStackSplitter.getSize());
+		//logProcessing("");
 		
 		//Loop through splitImages in xyStackSplitter:
 		
@@ -1310,7 +1319,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			
 			blurredImage = xyStackSplitter.getNextImp(a);
 			
-			logProcessing("  Processing Image: "+blurredImage.getTitle() );
+			//logProcessing("  Processing Image: "+blurredImage.getTitle() );
 			
 			//IJ.showMessage("1243 blurredImage: "+blurredImage);
 			
