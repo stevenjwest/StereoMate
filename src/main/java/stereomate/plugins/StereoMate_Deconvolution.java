@@ -249,7 +249,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		
 		//Set of Strings for the ComboBox - beinning with a BLANK String (forces the user to select
 			//a channel number - they consciously have to do it, therefore less likely to make a mistake..)
-		channels = new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+		channels = new String[] { "", "1", "2", "3", "4" };
 		channelsComboBox = new JComboBox<String>(channels);
 		
 		//set actionListener to channelsComboBox - this needs to set the PsfSelectorButton to active
@@ -462,8 +462,6 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		PsfSelector.addItem("488nm 1.4NA 170um 1.518RI 40x40nm 5.0x5.0.tif");
 		PsfSelector.addItem("546nm 1.4NA 170um 1.518RI 40x40nm 5.0x5.0.tif");
 		PsfSelector.addItem("647nm 1.4NA 170um 1.518RI 40x40nm 5.0x5.0.tif");
-		PsfSelector.addItem("488nm 40x40x100 ExEm.tif");
-		PsfSelector.addItem("546nm 40x40x100 ExEm.tif");
 		PsfSelector.addItem("405nm 1.4NA 170um 1.518RI 60x60nm 5.0x5.0.tif");
 		PsfSelector.addItem("488nm 1.4NA 170um 1.518RI 60x60nm 5.0x5.0.tif");
 		PsfSelector.addItem("546nm 1.4NA 170um 1.518RI 60x60nm 5.0x5.0.tif");
