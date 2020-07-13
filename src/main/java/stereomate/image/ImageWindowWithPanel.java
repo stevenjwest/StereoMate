@@ -4998,14 +4998,20 @@ public class ImageWindowWithPanel {
 		removeKeyListeners();
 		removeMouseListeners();
 		
-		ActionListener[] als = forward.getActionListeners();
+		ActionListener[] als;
+		
+		if(forward!=null) {
+		als = forward.getActionListeners();
 		for(int b=0; b<als.length; b++) {
 			forward.removeActionListener(als[b]);
 		}
+		}
 		
+		if(backward!=null) {
 		als = backward.getActionListeners();
 		for(int b=0; b<als.length; b++) {
 			backward.removeActionListener(als[b]);
+		}
 		}
 		
 		
@@ -5016,14 +5022,21 @@ public class ImageWindowWithPanel {
 			}
 		}
 		
-		ChangeListener[] cls = minSlice.getChangeListeners();
+		
+		ChangeListener[] cls;
+		
+		if(minSlice!= null) {
+		cls = minSlice.getChangeListeners();
 		for(int a=0; a<cls.length; a++) {
 			minSlice.removeChangeListener(cls[a]);
 		}
+		}
 		
+		if(maxSlice!= null) {
 		cls = maxSlice.getChangeListeners();
 		for(int a=0; a<cls.length; a++) {
 			maxSlice.removeChangeListener(cls[a]);
+		}
 		}
 		
 		for(int a=0; a<keyListeners.size(); a++) {
@@ -5464,7 +5477,7 @@ public class ImageWindowWithPanel {
 	       */
 	   	public void fitToWindow() {
 	   		
-	   		////IJ.log("CC FIT TO WINDOW!");
+	   		//IJ.log("CC FIT TO WINDOW!");
 	   		
 	   		ImageWindow win = imp.getWindow();
 			
@@ -5473,15 +5486,36 @@ public class ImageWindowWithPanel {
 			Rectangle bounds = win.getBounds();
 			Insets insets = win.getInsets();
 			
-			int sliderHeight = win.getSliderHeight();
+			//int sliderHeight = win.getSliderHeight();
+			
+			//IJ.log("");
+			//IJ.log("srcRect.width: "+srcRect.width+" ImageWindow.HGAP: "+ImageWindow.HGAP+" ImageWindow.VGAP: "+ImageWindow.VGAP );
+			//IJ.log("sliderHeight: "+sliderHeight+" panelHeight: "+panelHeight);
+			//IJ.log("");
+			//IJ.log("bounds.width: "+bounds.width+" insets.left: "+insets.left+" insets.right: "+insets.right);
+			//IJ.log("bounds.height: "+bounds.height+" insets.top: "+insets.top+" insets.bottom: "+insets.bottom);
 			
 			double xmag = (double)(bounds.width-(insets.left+insets.right+ImageWindow.HGAP*2))/srcRect.width;
-			double ymag = (double)(bounds.height-(ImageWindow.VGAP*2+insets.top+insets.bottom+sliderHeight+(panelHeight-15) ))/srcRect.height;
+			double ymag = (double)(bounds.height-(ImageWindow.VGAP*2+insets.top+insets.bottom+(panelHeight-15) ))/srcRect.height;
+			
+			//IJ.log("");
+			//IJ.log("xmag: "+xmag);
+			//IJ.log("ymag: "+ymag);
 			
 			setMagnification(Math.max(xmag, ymag));
 			
 			int width=(int)(imageWidth*magnification);
 			int height=(int)(imageHeight*magnification);
+			
+			//IJ.log("");
+			//IJ.log("width: "+width);
+			//IJ.log("height: "+height);
+			//IJ.log("");
+			//IJ.log("imageWidth: "+imageWidth);
+			//IJ.log("imageHeight: "+imageHeight);
+			//IJ.log("");
+			//IJ.log("dstWidth: "+dstWidth);
+			//IJ.log("dstHeight: "+dstHeight);
 			
 			if (width==dstWidth&&height==dstHeight) return;
 			
@@ -5617,20 +5651,26 @@ public class ImageWindowWithPanel {
 				//if maxLength or higher -> getHigherZoomLevel:
 			double newMag;
 			if(magnification < maxLengthMag) {
-				if((magnification*2)>= maxLengthMag) {
-					newMag = maxLengthMag;
+				
+				if((minLengthMag*2) < maxLengthMag) {
+				
+					if(magnification == minLengthMag) {
+						newMag = ((maxLengthMag+minLengthMag)/2);
+					}
+					else {
+						newMag = maxLengthMag;
+					}
+				
 				}
 				else {
 					//newMag = (magnification*2);
-					newMag = ((maxLengthMag+minLengthMag)/2);
+					newMag = maxLengthMag;
 				}
 			}
-			//if(magnification == minLengthMag) {
-			//	newMag = maxLengthMag;
-			//}
 			else {
 				newMag = getHigherZoomLevel(magnification);
 			}
+			
 						
 			int newWidth = (int)(imageWidth*newMag);
 			int newHeight = (int)(imageHeight*newMag);
@@ -5689,18 +5729,23 @@ public class ImageWindowWithPanel {
 			double oldMag = magnification;
 
 			double newMag;
+			
+			
 			if(oldMag <= maxLengthMag) {
-				if( (oldMag/2) > minLengthMag) {
-					//newMag = (oldMag/2);
-					newMag = ((maxLengthMag+minLengthMag)/2);
+
+				if( (maxLengthMag/2) > minLengthMag) {
+
+					if(oldMag == maxLengthMag) {
+						newMag = ((maxLengthMag+minLengthMag)/2);
+					}
+					else {
+						newMag = minLengthMag;
+					}
 				}
 				else {
 					newMag = minLengthMag;
 				}
 			}
-			//if(oldMag == maxLengthMag) {
-			//	newMag = minLengthMag;
-			//}
 			else {
 				
 				newMag = getLowerZoomLevel(magnification);
@@ -5709,6 +5754,7 @@ public class ImageWindowWithPanel {
 					newMag = maxLengthMag;
 				}
 			}
+			
 			
 			double srcRatio = (double)srcRect.width/srcRect.height;
 			double imageRatio = (double)imageWidth/imageHeight;

@@ -10,9 +10,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 
 import java.util.ArrayList;
@@ -160,6 +161,11 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	String dbStr;
 	String detectDivergenceStr;
 	String logImageProcessing;
+	
+	File decLogFile;
+	
+	FileWriter fw;
+	PrintWriter pw;
 	
 	boolean processedAnImage;
 	
@@ -544,13 +550,30 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	
 	
 	/**
-	 * Add a String to the log entry to display current processing in this algorithm.
+	 * Add a String to the log entry to display current processing in this algorithm,
+	 * if logEntry is TRUE.
+	 * <p>
+	 * Also, write processing to a log file in the output directory.
 	 * @param logEntry
 	 */
 	protected void logProcessing(String logEntry) {
 		if(logImageProcessing.equalsIgnoreCase("true")) {
 			IJ.log(logEntry);
 		}
+		
+		// write the data to the decLogFile:
+		try {
+			fw = new FileWriter(decLogFile, true);
+			pw = new PrintWriter(fw);
+			// write to the file:
+			pw.print(logEntry+"\n");			
+			// close the print writer:
+			pw.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
@@ -682,6 +705,64 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 			 nList2 = docSMS.getElementsByTagName("logProcessing");
 			logImageProcessing = ((Element)nList2.item(0)).getAttribute("str");			
 
+			
+		// WRITE all these settings to the DECONVOLUTION LOG FILE so the processing of
+			// the images is TRACEABLE
+		
+		decLogFile = new File(dw.getOutputParentFile().getAbsolutePath() 
+								+ File.separator + "deconvolution_log.txt" );
+		
+		try {
+			fw = new FileWriter(decLogFile, true);
+			pw = new PrintWriter(fw);
+			// write to the file:
+			pw.print("StereoMate Deconvolution Log\n");
+			pw.print("\n");
+			pw.print("--------------------\n");
+			pw.print("\n");
+			pw.print("Settings:\n");
+			pw.print("\n");
+			pw.print("PSFs:\n");
+			for(int b=0; b<PsfSelectors.size() ; b++) {
+				pw.print("  Ch"+(b+1)+": "+(String)PsfSelectors.get(b).getSelectedItem()+"\n" );
+			}
+			pw.print("\n");
+			pw.print("maxIters: "+maxItersStr+"\n");
+			pw.print(""+"\n");
+			pw.print("nOfThreads: "+nOfThreadsStr+"\n");
+			pw.print(""+"\n");
+			pw.print("--------------------"+"\n");
+			pw.print(""+"\n");
+			pw.print("boundary: "+boundaryStr+"\n");
+			pw.print("resizing: "+resizingStr+"\n");
+			pw.print("output: "+outputStr+"\n");
+			pw.print("precision: "+precisionStr+"\n");
+			pw.print("threshold: "+thresholdStr+"\n");
+			pw.print("showIterations: "+showIterationsStr+"\n");
+			pw.print("gamma: "+gammaStr+"\n");
+			pw.print("filterXY: "+filterXYStr+"\n");
+			pw.print("filterZ: "+filterZStr+"\n");
+			pw.print("normalize: "+normalizeStr+"\n");
+			pw.print("logMean: "+logMeanStr+"\n");
+			pw.print("antiRing: "+antiRingStr+"\n");
+			pw.print("changeThreshPercent: "+changeThreshPercentStr+"\n");
+			pw.print("db: "+dbStr+"\n");
+			pw.print("detectDivergence: "+detectDivergenceStr+"\n");
+			pw.print(""+"\n");
+			pw.print(""+"\n");
+			pw.print("--------------------"+"\n");
+			pw.print(""+"\n");
+			pw.print(""+"\n");
+			pw.print(""+"\n");
+			
+			// close the print writer:
+			pw.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 			
 		// All of the variables have been collected for deconvolution from xml file now,
 				// Next need to deconvolve each image selected on the DialogWindow -> via process() method

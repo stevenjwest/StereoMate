@@ -1590,7 +1590,7 @@ public class InputOutputFramework {
 			if(isCharANumber(character) == false) {
 				break;
 			}
-			//if no break has occurred, the char is a number.  Add this to the String 'number'
+			//if no break has occurred, and the char is a number - add this to the String 'number'
 			numberString = numberString + character;
 		}
 		//at this point, number will either contain a number of characters making a number,
@@ -1792,11 +1792,34 @@ public class InputOutputFramework {
 	}
 	
 	
+	/**
+	 * returns false if char is a number.
+	 * @param character
+	 * @return
+	 */
 	public Boolean isCharANumber(char character) {
 		//if the character is not a number character, return false:
 		if(character != '0' && character != '1' && character != '2' && character != '3' && 
 				character != '4' && character != '5' && character != '6' && character != '7' && 
-				character != '8' && character != '9') {
+				character != '8' && character != '9' ) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	/**
+	 * returns false if char is a number or a spacer: underscore, dash, space.
+	 * @param character
+	 * @return
+	 */
+	public Boolean isCharANumberOrSpacer(char character) {
+		//if the character is not a number character, return false:
+		if(character != '0' && character != '1' && character != '2' && character != '3' && 
+				character != '4' && character != '5' && character != '6' && character != '7' && 
+				character != '8' && character != '9'  && character != '_'  && character != '-'
+				  && character != ' ') {
 			return false;
 		}
 		else {
@@ -1815,7 +1838,7 @@ public class InputOutputFramework {
 		//if the character is not a number character, return false:
 		if(character != '0' && character != '1' && character != '2' && character != '3' && 
 				character != '4' && character != '5' && character != '6' && character != '7' && 
-				character != '8' && character != '9' && character != ' ') {
+				character != '8' && character != '9' && character != ' '&& character != '-'&& character != '_') {
 			return false;
 		}
 		else {

@@ -8,6 +8,7 @@ import stereomate.dialog.DialogWindow;
 import stereomate.dialog.DialogWindow.FileSelector;
 import stereomate.image.ImageWindowWithPanel;
 import stereomate.image.ImageWindowWithPanel.ToolPanel;
+import stereomate.settings.StereoMateUtilities;
 import ij.gui.*;
 import ij.io.FileInfo;
 import ij.io.FileOpener;
@@ -49,14 +50,14 @@ import ij.plugin.*;
 
 /**
  * 
- * The ROI Di-Sector Plugin.
+ * The ROI Manager Plugin.
  * <p>
  * 
  * 
  * @author stevenwest
  *
  */
-public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
+public class ROI_Manager implements PlugIn, StereoMateAlgorithm {
 	
 	//ImagePlus imp;
 	
@@ -65,8 +66,16 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 	FileSelector refFS;
 	
 	ImageJ ij; //ij instance.
+	
+	
 	ImageWindowWithPanel iwp; //the first iwp - for delineating Roi Boundaries.
+	
+	JButton nextStepButton; // button to move to next step - declared here as need to remove listener from it!
+	
+	
 	ImageWindowWithPanel iwp2; //the second iwp - for selecting Roi Regions.
+	
+	JButton finishButton; // button to finish ROI def - declared here as need to remove listener from it!
 	
 	File file; //file object to store path to File.
 	
@@ -80,28 +89,31 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 
 	/**
 	 * The Run Method initialises the DialogWindow:  The DialogWindow provides the data
-	 * input for the ROI Di-Sector:
+	 * input for the ROI Manager:
 	 * <p>
 	 * - The input images, selected on the First FileSelector.
 	 * <p>
-	 * - Optional Reference Images:  These must match the input images in name, number
-	 * and directory structure.  This is optional, and should only become active once
+	 * - Optional Calibration Images:  These must match the input images in name, number
+	 * and directory structure.  They are used to correct the input image width ahd height,
+	 * to match the actual image stacks - when tile scans are made andstitched, often the exact
+	 * size of the images can vary very slightly, and this must be corrected.  
+	 * This is optional, and should only become active once
 	 * the RefImages checkbox is checked.
 	 * 
 	 */
 	@Override
 	public void run(String arg0) {
 		
-		dw = new DialogWindow("ROI Di-Sector", this);
+		dw = new DialogWindow("ROI Manager", this);
 		
 		FileSelector inputFS = dw.addFileSelector("Input Image(s):"); //add FileSelector panel.
 		
-		JCheckBox refCheckBox = new JCheckBox("Use Reference Image:");
+		JCheckBox refCheckBox = new JCheckBox("Use Calibration Image(s):");
 		refCheckBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		dw.add( refCheckBox );
 		
 		// Add checkbox and Reference Images FileSelector:
-		refFS = dw.addFileSelector("Reference Image(s):");
+		refFS = dw.addFileSelector("Calibration Image(s):");
 		
 		refFS.setEnabled(false);
 		
@@ -174,10 +186,11 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 			//This ensures the output is saved properly in saveRois()
 		file = dw.getCurrentOutputFile();  //Could just call this method in saveRois()?!
 		
-		IJ.showMessage("resizeRefImage");
+		//IJ.showMessage("resizeRefImage");
+		//IJ.showMessage("implus path: "+dw.getFilePath() );
 		
 		if(refFS.inputOutputFramework.fileArray != null) {
-			implus = resizeRefImage(implus);	
+			implus = resizeRefImage2(implus);	
 		}
 
 		//Do the Computations:
@@ -209,6 +222,8 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		
 		//IJ.log("memory in use: " +IJ.currentMemory());
 		
+		shutdownDW();
+		
 		System.gc();
 		System.gc();
 		
@@ -239,31 +254,35 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 	}
 	
 	public ImagePlus resizeRefImage2(ImagePlus implus) {
-		
-		IJ.showMessage("Start");
-		
+				
 		File refFile = dw.fileSelectors.get(1).inputOutputFramework.fileArray.get( dw.getCurrentFileIndex() );		
 		ImagePlus refImp = IJ.openImage(refFile.getAbsolutePath());
 		
+		//IJ.showMessage("implus w: "+implus.getWidth()+" h: "+implus.getHeight() );
+		//IJ.showMessage("refImp w: "+refImp.getWidth()+" h: "+refImp.getHeight() );
+		
 		// resize imp to match implus size:
 		try {
-			final imagescience.image.Image input = imagescience.image.Image.wrap(refImp);
+			final imagescience.image.Image input = imagescience.image.Image.wrap(implus);
 			final Scale scaler = new Scale();
 			//scaler.messenger.log(TJ_Options.log);
 			//scaler.progressor.display(TJ_Options.progress);
 			double xf=1, yf=1, zf=1, tf=1, cf=1;
-			xf = (double)implus.getWidth() / refImp.getWidth();
-			yf = (double)implus.getHeight() / refImp.getHeight();
-			zf = Double.parseDouble(""+refImp.getNSlices()); 
-			int scheme = Scale.NEAREST;
-			//int scheme = Scale.BSPLINE5;
+			xf = (double)refImp.getWidth() / implus.getWidth();
+			yf = (double)refImp.getHeight() / implus.getHeight();
+			//zf = Double.parseDouble(""+refImp.getNSlices()); 
+			//int scheme = Scale.NEAREST;
+			int scheme = Scale.BSPLINE5;
 			final imagescience.image.Image output = scaler.run(input,xf,yf,zf,tf,cf,scheme);
 			//if (preserve) {
 				//final Aspects a = input.aspects();
 				//output.aspects(new Aspects(a.x/xf,a.y/yf,a.z/zf,a.t/tf,a.c/cf));
 			//}
 			//TJ.show(output,image);
-			IJ.showMessage("End");
+			//implus.close();
+			input.imageplus().close();
+			implus = output.imageplus();
+			//IJ.showMessage("implus w: "+implus.getWidth()+" h: "+implus.getHeight() );
 			return output.imageplus();
 			
 		} catch (OutOfMemoryError e) {
@@ -288,6 +307,43 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		return implus;
 		
 	}
+	
+	
+	public void shutdownIWP(ImageWindowWithPanel IWP) {
+		
+		// shut down the IWP:
+		IWP.getWindow().dispose(); //dispose the iw.
+		IWP.setModal(false); //re-activate the ij window.
+		IWP.shutdownImageWindowWithPanel();
+		IWP = null;  // -> set to null to garbage collect.
+
+		System.gc();
+		
+	}
+	
+	
+	public void shutdownDW() {
+		
+		dw.shutDownDialogWindow();
+		dw = null; //DialogWindow object - to create a dialog to select files for
+							//processing.
+		
+	}
+	
+	
+	
+	/**
+	 * Remove all Listeners from this Object.
+	 */
+	public void removeListeners() {
+				
+		StereoMateUtilities.removeActionListener(nextStepButton);
+				
+		StereoMateUtilities.removeActionListener(finishButton);		
+		
+	}
+	
+	
 	
 	/**
 	 * This method is called by the process() method.
@@ -378,7 +434,7 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		nextStepLabel  = new JLabel("<html>Click here<br>when complete:</html>", SwingConstants.CENTER);
 		nextStepLabel.setFont( new Font("SansSerif", Font.PLAIN,10));
 		
-		JButton nextStepButton = new JButton( createImageIcon("/Icons/NextStepButton.png", "Icon for Moving onto the next step of the algorithm") );
+		nextStepButton = new JButton( createImageIcon("/Icons/NextStepButton.png", "Icon for Moving onto the next step of the algorithm") );
 		
 		nextStepButton.setPreferredSize( new Dimension(30,30));
 		nextStepButton.setBorder(new LineBorder(Color.BLACK,1,false));
@@ -453,11 +509,10 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		
 		//iwp.shutdownImageWindowWithPanel();
 		iwp.getWindow().dispose(); //dispose of the iw - this is set up again in iwp.setUpWindow() !
-		iwp = null;  // -> set to null to garbage collect.
+				
 		
-		// impProcessed = iwp.getOriginalImagePlus();
+		//create iwp object WITH EXTRA CHANNEL:
 		
-		//create iwp object:
 		Panel p = new Panel(); //create panel for iwp object.
 		iwp2 = new ImageWindowWithPanel(passedImp, p, 
 						ImageWindowWithPanel.createBlankImageStack(
@@ -468,6 +523,7 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 					8, true ); //create iwp from file & panel.
 													//this iwp will be displayed as a projection.
 
+		
 		// Set active channel to last channel - the one NOT DISPLAYED & which will contain the processed imp:
 		iwp2.setActiveChannel( iwp2.getChannels() );
 
@@ -476,7 +532,8 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		
 		//iwp2.addRefreshButton(); //add a refresh button to iwp.
 		
-		//Add Roi Tool Panel:
+		
+		// Add Roi Tool Panel:
 		
 		JLabel toolLabel = new JLabel("<html>Sketch ROI<br>boundaries:</html>", SwingConstants.CENTER);
 		toolLabel.setFont( new Font("SansSerif", Font.PLAIN, 10));
@@ -493,14 +550,17 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		toolPanel.setBorder(new LineBorder(Color.BLACK,1,false));
 				
 		iwp2.addComponent(toolPanel);
-				
-		//Add Roi Store Panel:
+		
+		
+		// Add Roi Store Panel:
+		
 		roiStore = iwp2.new RoiStore(false); //boolean false means no rois will be displayed
 											//required to allow overlay to be retained
 											//whilst ROIs are added to the Store.		
 		iwp2.addComponent(roiStore);
-				
-		//Add Finish Roi Delineation button:
+			
+		
+		// Add Finish Roi Delineation button:
 		
 		JPanel finishPanel = new JPanel();
 		JLabel finishLabel = new JLabel();
@@ -508,7 +568,7 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 		finishLabel  = new JLabel("<html>Click here<br>when complete:</html>", SwingConstants.CENTER);
 		finishLabel.setFont( new Font("SansSerif", Font.PLAIN,10));
 		
-		JButton finishButton = new JButton( createImageIcon("/Icons/NextStepButton.png", "Icon for Moving onto the next step of the algorithm") );
+		finishButton = new JButton( createImageIcon("/Icons/NextStepButton.png", "Icon for Moving onto the next step of the algorithm") );
 		
 		finishButton.setPreferredSize( new Dimension(30,30));
 		finishButton.setBorder(new LineBorder(Color.BLACK,1,false));
@@ -542,31 +602,7 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 								//to allow ImageJ window re-activation if iwp is closed..
 							//MUST be called after setup window - as new iw is generated in that method.
 		
-		//iwp2.layoutWindow(); //layout the iwp - validate components and maximise window.
-		
-		//deactivate and remove Channels scrollbar:
-		//iwp2.deactivateChannels();
-		//iwp2.removeChannelsScrollbar();
-		
-		//set the active channels BEFORE extra channel is added:
-			//ensures only the previous channels are available for alteration..
-		//if(iwp2.getChannels() > 1) {
-		//	iwp2.setDisplayChannels(activeChannels);
-		//}
-		
-		//Now the new image is set up, the extra channel can be added & drawn on for Roi delineateion:
-		
-		//First, add an extra blank channel to the iwp ImagePlus:
-		//iwp2.addBlankChannel(false);
 
-		//Finally, re-set reference of impProcessed to the new imp ref in iwp:
-		//impProcessed.close();
-		//impProcessed = iwp2.getImagePlus(); //need to reset impProcessed ref to new imp after 
-											//adding blank channel and setting slice projection
-		
-		//set imp to the last channel (the one just added above - this is where the outlines
-			// will be drawn):
-		//impProcessed.setC(channels);
 				
 		//Now, sketch the boundaries derived previously onto this channel:
 		
@@ -661,11 +697,17 @@ public class Roi_DiSector implements PlugIn, StereoMateAlgorithm {
 	 */
 	public void saveRois() {
 		
-		iwp2.getWindow().dispose(); //dispose of the iw.
-		iwp2.setModal(false); //re-activate the ij window.
+		//iwp2.getWindow().dispose(); //dispose of the iw.
+		//iwp2.setModal(false); //re-activate the ij window.
 		//impProcessed.close();
-		iwp2 = null; //set iwp to null to garbage collect this object.
+		//iwp2 = null; //set iwp to null to garbage collect this object.
 		//imp.close();
+		
+		
+		// properly shutdown the iwp and dw:		
+		removeListeners();
+		shutdownIWP(iwp);		
+		shutdownIWP(iwp2);
 		
 
 		Roi[] rois = roiStore.getRoisAsArray();
