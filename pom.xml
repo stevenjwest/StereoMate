@@ -144,7 +144,7 @@
 		<dependency>
 			<groupId>io.github.stevenjwest</groupId>
 			<artifactId>ParallelIterativeDeconvolution</artifactId>
-			<version>1.11</version>
+			<version>1.13</version>
 		</dependency>
 
 		<!--commons-math-->
