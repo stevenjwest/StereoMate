@@ -259,9 +259,10 @@ public class StereoMate_Crop_Stacks  implements PlugIn, StereoMateAlgorithm {
 			// The tiles will ALSO differentiate at slices 1-5, and at slice 6 all tiles will be present
 		// Therefore need to have START (zSlices - zDepth) and END (zDepth)
 		
-		
+		if(zSlices > zDepth) {
 		// reslice the stack:
-		imp = ij.plugin.SubHyperstackMaker.makeSubhyperstack(imp, "1-"+imp.getNChannels(), ""+zDiff+"-"+zDepth, "1-"+imp.getNFrames() );
+		  imp = ij.plugin.SubHyperstackMaker.makeSubhyperstack(imp, "1-"+imp.getNChannels(), ""+zDiff+"-"+zDepth, "1-"+imp.getNFrames() );
+		}
 		
 		// save the stack:
 		if(overwrite) {

@@ -60,7 +60,7 @@ import edu.emory.mathcs.restoretools.Enums.OutputType;
 import edu.emory.mathcs.restoretools.Enums.PrecisionType;
 import edu.emory.mathcs.restoretools.iterative.IterativeEnums.BoundaryType;
 import edu.emory.mathcs.restoretools.iterative.IterativeEnums.ResizingType;
-import edu.emory.mathcs.utils.ConcurrencyUtils;
+import edu.emory.mathcs.utils.pc.ConcurrencyUtils;
 import edu.emory.mathcs.restoretools.iterative.wpl.WPLDoubleIterativeDeconvolver3D;
 import edu.emory.mathcs.restoretools.iterative.wpl.WPLFloatIterativeDeconvolver3D;
 import edu.emory.mathcs.restoretools.iterative.wpl.WPLOptions;
@@ -90,11 +90,9 @@ import stereomate.settings.MyIntFilter;
  */
 public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 	
-	/**
-	 * NAMED CONSTANTS:
-	 */
-	int PSF_SLICE_NUMBER = 55;
-	int PSF_XY = 125;
+	/// PSF size
+	int PSF_SLICE_NUMBER;
+	int PSF_XY;
 
 	DialogWindow dw;
 	Container dialogWindowPanel;
@@ -472,6 +470,12 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		PsfSelector.addItem("488nm 1.4NA 170um 1.518RI 60x60nm 5.0x5.0.tif");
 		PsfSelector.addItem("546nm 1.4NA 170um 1.518RI 60x60nm 5.0x5.0.tif");
 		PsfSelector.addItem("647nm 1.4NA 170um 1.518RI 60x60nm 5.0x5.0.tif");
+		//PsfSelector.addItem("488nm ExEm SQUARED 170um 1.518RI 40x40 5.0x5.0.tif");
+		//PsfSelector.addItem("488nm ExEm 170um 1.518RI 40x40 5.0x5.0.tif");
+		//PsfSelector.addItem("02_405nm_ExEm_40x40x100nm.tif");
+		//PsfSelector.addItem("02_488nm_ExEm_40x40x100nm.tif");
+		//PsfSelector.addItem("02_546nm_ExEm_40x40x100nm.tif");
+		//PsfSelector.addItem("02_647nm_ExEm_40x40x100nm.tif");
 		//PsfSelector.addItem("1.4NA 170um 1.518RI Alexa 647 40x40nm 5.0x5.0.tif");
 	}
 	
@@ -771,7 +775,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		logProcessing("Beginning Deconvolution of "+dw.totalFileCount+" files...");
 		logProcessing("");
 		logProcessing("Threads: "+nOfThreadsStr+"  Iterations: "+maxItersStr );
-		logProcessing(" Channels: "+PsfSelectors.size()+"  PSF Z Slices: "+PSF_SLICE_NUMBER );
+		logProcessing(" Channels: "+PsfSelectors.size() );
 		logProcessing("--------------------------------------");
 		
 		
@@ -1190,6 +1194,10 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		//ImageProcessor ip2 = scalePSF(impPSF, 99, 99, 29);
 		//ImagePlus imp2 = new ImagePlus("ImagePlus2",ip2);
 		//imp2.show();
+		
+		// set PSF dimensions:
+		PSF_SLICE_NUMBER = impPSF.getNSlices();
+		PSF_XY = impPSF.getWidth();
 		
 		logProcessing("  Ch"+(b+1)+" PSF: "+PSF);
 		
@@ -1731,12 +1739,12 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
      */
     public ImagePlus openTiffFromJar(String path, String title) {
            InputStream is = getClass().getResourceAsStream(path);
-           System.out.println("input stream: "+is);
+           //System.out.println("input stream: "+is);
            if (is!=null) {
                Opener opener = new Opener();
-               System.out.println("opener: "+opener);
+               //System.out.println("opener: "+opener);
                ImagePlus imp = opener.openTiff(is, title);
-               System.out.println("imp: "+imp);
+               //System.out.println("imp: "+imp);
                try {
 				is.close();
                	} catch (IOException e) {
@@ -2908,8 +2916,8 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 				for(int a=0; a<nList2.getLength(); a++) {
 					memory = Long.parseLong( ((Element)nList2.item(a)).getAttribute("memory") );
 					length = Integer.parseInt( ((Element)nList2.item(a)).getTextContent() );
-					////IJ.showMessage("memToLength memory: "+memory);
-					////IJ.showMessage("memToLength length: "+length);
+					//IJ.showMessage("memToLength memory: "+memory);
+					//IJ.showMessage("memToLength length: "+length);
 					memToLength.add(memory,  length);
 				}
 				
@@ -3086,7 +3094,7 @@ public class StereoMate_Deconvolution implements StereoMateAlgorithm, PlugIn {
 		 */
 		public int lookUpMaxXY(long memory) {
 			
-			int maxMemIndex = -1;
+			int maxMemIndex = mem.size()-1;
 			
 			for(int a=0; a<mem.size(); a++) {
 				if(memory < mem.get(a) ) {
