@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 import ij.IJ;
 import ij.gui.GUI;
 import ij.plugin.PlugIn;
-import edu.emory.mathcs.utils.ConcurrencyUtils;
+import edu.emory.mathcs.utils.pc.ConcurrencyUtils;
 import stereomate.settings.MyIntFilter;
 
 
