@@ -755,7 +755,10 @@ public class InputOutputFramework {
 				else {
 					//the file is not a directory,
 					//so store in fileArray:
-					fileArray.add(files[a]);
+					if(files[a].getName().endsWith("_log.txt") == false) {
+					  fileArray.add(files[a]); // only collect the file if its NOT the log file!
+					    // SM algorithms now output a _log.txt file to tell the user what processing happened
+					}
 				}
 			}//end for a
 			
@@ -916,7 +919,10 @@ public class InputOutputFramework {
 						//begin with a "." - i.e. it is not a hidden file.
 							//This excludes the .DS_Store file on mac which can sometimes be
 							//saved to fileArray...
-						fileArray.add(files[b]);
+						if(files[b].getName().endsWith("_log.txt") == false) {
+							    // SM algorithms now output a _log.txt file to tell the user what processing happened
+							  fileArray.add(files[b]); // only collect the file if its NOT the log file!
+						}
 					}
 				}
 			} //end for b
